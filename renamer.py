@@ -1,8 +1,6 @@
 import os
 
 CONTAINER_TEMPLATE = '<c>'
-
-
 clear_console = lambda: os.system('cls')
 
 def print_main_menu():
@@ -13,6 +11,8 @@ def print_main_menu():
 
 def execute_basic_rename(path):
     counter = 0
+    path = path if path else os.getcwd()
+
     for dirpath, _, filenames in os.walk(path):
         for filename in filenames:
             file_full = os.path.join(dirpath, filename)
@@ -58,9 +58,3 @@ while True:
         clear_console();
         print('Invalid option. Choose again')
         print_main_menu()
-
-
-# Group the renaming depending on the extension because it is possible to have 2 files with the same name but different extensions
-# Rename the files in the folder
-# Add patterns - what to be changed with counter
-# Rename sequence depending on the name of an input folder
