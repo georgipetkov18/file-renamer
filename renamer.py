@@ -1,5 +1,4 @@
-import os
-import re
+import os, re
 
 CONTAINER_TEMPLATE = '<c>'
 clear_console = lambda: os.system('cls')
