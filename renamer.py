@@ -1,4 +1,5 @@
 import os
+import re
 
 CONTAINER_TEMPLATE = '<c>'
 clear_console = lambda: os.system('cls')
@@ -50,7 +51,7 @@ def execute_basic_rename(path, name_input, counter = 0):
             counter += 1
 
 
-def execute_pattern_based_rename(path, input_pattern:str, counter = 0):
+def execute_pattern_based_rename(path, input_pattern, container_template, counter = 0, digits_count = None):
     path = path if path else os.getcwd()
 
     for dirpath, _, filenames in os.walk(path):
@@ -60,7 +61,10 @@ def execute_pattern_based_rename(path, input_pattern:str, counter = 0):
                 continue
             
             _, extension = os.path.splitext(file_full)
-            new_name = f'{input_pattern.replace(CONTAINER_TEMPLATE, str(counter))}{extension}'
+            counter_str = str(counter)
+            counter_digits_count = len(str(counter))
+            counter_cont = counter_str if digits_count == None else f'{"0" * (digits_count - counter_digits_count)}{counter_str}'
+            new_name = f'{input_pattern.replace(container_template, counter_cont)}{extension}'
             new_file_full = os.path.join(dirpath, new_name)
             
             os.rename(file_full, new_file_full)
@@ -90,17 +94,31 @@ while True:
         break
 
     elif input_option == 2:
+        digits_count = None
         clear_console()
 
-        print(f'Enter your pattern, replacing the variable part of the sequence with {CONTAINER_TEMPLATE}')
-        print(f'e.g. example - {CONTAINER_TEMPLATE} ---> example - 1 ---> example - 2, etc.')
+        while True:
+            print(f'Enter your pattern, replacing the variable part of the sequence with {CONTAINER_TEMPLATE}')
+            print(f'e.g. example - {CONTAINER_TEMPLATE} ---> example - 1 ---> example - 2, etc.')
+            input_pattern = input()
+            res = re.search('<c(:d\d+)?>', input_pattern)
+            match = CONTAINER_TEMPLATE
 
-        input_pattern = input()
-        
+            if res:
+                span = res.span()
+                match = input_pattern[span[0]:span[1]]
+                match_split = match.strip('<>').split(':d')
+                if len(match_split) > 1:
+                    digits_count = int(match_split[1])
+                break
+
+            clear_console()
+            print('Invalid Pattern') 
+
         print('-' * 50)
 
         path, counter = get_details_info()
-        execute_pattern_based_rename(path, input_pattern, counter)
+        execute_pattern_based_rename(path, input_pattern, match, counter, digits_count)
 
         print('Done')
         break
