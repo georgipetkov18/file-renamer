@@ -6,11 +6,34 @@ clear_console = lambda: os.system('cls')
 def print_main_menu():
     print('0.Exit')
     print('1.Basic Rename - rename files using your input and incrementing a counter afterwards')
-    print('2.Continuous Rename - rename files in a folder using the naming pattern of another folder')
+    print('2.Pattern Based Rename - rename files based on an input pattern')
 
 
-def execute_basic_rename(path):
+def get_details_info():
+    print('Enter the path to the folder where the files are located')
+    path = input()
     counter = 0
+
+    while True:
+        print('Do you want to enter an initial number y/n')
+        init_num = input()
+
+        if init_num.lower() == 'y':
+            print('Enter initial number')
+            counter = int(input())
+            break
+
+        elif init_num.lower() == 'n':
+            break
+
+        else:
+            continue
+
+    clear_console()
+    return (path, counter)
+
+
+def execute_basic_rename(path, name_input, counter = 0):
     path = path if path else os.getcwd()
 
     for dirpath, _, filenames in os.walk(path):
@@ -19,8 +42,25 @@ def execute_basic_rename(path):
             if file_full == os.path.abspath( __file__ ):
                 continue
             
-            name, extension = os.path.splitext(file_full)
-            new_name = f'{new_name_input} ({counter}){extension}'
+            _, extension = os.path.splitext(file_full)
+            new_name = f'{name_input} ({counter}){extension}'
+            new_file_full = os.path.join(dirpath, new_name)
+            
+            os.rename(file_full, new_file_full)
+            counter += 1
+
+
+def execute_pattern_based_rename(path, input_pattern:str, counter = 0):
+    path = path if path else os.getcwd()
+
+    for dirpath, _, filenames in os.walk(path):
+        for filename in filenames:
+            file_full = os.path.join(dirpath, filename)
+            if file_full == os.path.abspath( __file__ ):
+                continue
+            
+            _, extension = os.path.splitext(file_full)
+            new_name = f'{input_pattern.replace(CONTAINER_TEMPLATE, str(counter))}{extension}'
             new_file_full = os.path.join(dirpath, new_name)
             
             os.rename(file_full, new_file_full)
@@ -43,18 +83,30 @@ while True:
 
         print('-' * 50)
 
-        print('Enter the path to the folder where the files are located')
-        path = input()
-        execute_basic_rename(path)
+        path, counter = get_details_info()
+        execute_basic_rename(path, new_name_input, counter)
 
-        clear_console()
         print('Done')
         break
 
     elif input_option == 2:
-        pass
+        clear_console()
+
+        print(f'Enter your pattern, replacing the variable part of the sequence with {CONTAINER_TEMPLATE}')
+        print(f'e.g. example - {CONTAINER_TEMPLATE} ---> example - 1 ---> example - 2, etc.')
+
+        input_pattern = input()
+        
+        print('-' * 50)
+
+        path, counter = get_details_info()
+        execute_pattern_based_rename(path, input_pattern, counter)
+
+        print('Done')
+        break
 
     else:
         clear_console();
         print('Invalid option. Choose again')
         print_main_menu()
+
