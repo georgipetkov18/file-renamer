@@ -4,23 +4,27 @@ File renamer is a python script which helps the users when they want to organise
 
 ## Installation
 
-Firstly get the script by downloading it or cloning it from this repo
+Download or clone this repo
 
 ```bash
 git clone https://github.com/georgipetkov18/file-renamer.git
 ```
 
-Then make sure you have python installed on your machine
+1) Using the python file
+- Make sure you have python installed on your machine
 
 ```bash
 python --version
 ```
 
-Finally run the script
+- Run the script
 
 ```bash
 python renamer.py
 ```
+
+2) Using the executable file
+- Just start the exe file
 
 ## Usage
 
