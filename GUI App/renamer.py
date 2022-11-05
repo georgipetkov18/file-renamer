@@ -1,6 +1,7 @@
 import os, re
 import tkinter as tk
 from tkinter import ttk, filedialog
+from tkinter.messagebox import showinfo
 
 class Renamer:
     def execute_basic_rename(filenames, name_input, counter = 0):
@@ -135,23 +136,35 @@ class App(tk.Tk):
             title='Choose files',
             initialdir='/',
             filetypes=filetypes)
+            
+        if filenames and len(filenames) > 0:
+            radio_value = self.radio_var.get()
+            counter = int(self.init_number_field.get()) if self.init_number_field.get() else 0
+            if radio_value == 0:
+                Renamer.execute_basic_rename(filenames, self.pattern_field.get(), counter)
+                self.display_done()
+                
 
-        radio_value = self.radio_var.get()
-        counter = int(self.init_number_field.get()) if self.init_number_field.get() else 0
-        if radio_value == 0:
-            Renamer.execute_basic_rename(filenames, self.pattern_field.get(), counter)
+            elif radio_value == 1:
+                digits_count = None
+                input_pattern = self.pattern_field.get()
+                span = self.pattern_info.span()
+                match = input_pattern[span[0]:span[1]]
+                match_split = match.strip('<>').split(':d')
 
-        elif radio_value == 1:
-            digits_count = None
-            input_pattern = self.pattern_field.get()
-            span = self.pattern_info.span()
-            match = input_pattern[span[0]:span[1]]
-            match_split = match.strip('<>').split(':d')
+                if len(match_split) > 1:
+                    digits_count = int(match_split[1])
 
-            if len(match_split) > 1:
-                digits_count = int(match_split[1])
+                Renamer.execute_pattern_based_rename(filenames, input_pattern, match, counter, digits_count)
+                self.display_done()
 
-            Renamer.execute_pattern_based_rename(filenames, input_pattern, match, counter, digits_count)
+
+    def display_done(self):
+        showinfo(
+        title='Info',
+        message='Done!'
+    )
+
 
 app = App()
 app.mainloop()
