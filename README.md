@@ -36,4 +36,4 @@ Three options will be displayed
 2.Pattern Based Rename - rename files based on an input pattern
 ```
 
-Click the one which works the best for you by simply entering the number before the option in the terminal and clicking enter. Then follow the instructions. If the pattern based rename is selected one can use <c> sequence to sepcify the place where the variable part lies. Furthermore, one can use a number inside the <c> container to specify how many digits they want the newly generated sequence to be, e.g. <c:d4> will generate 4 digits and if the current number has fewer digits then it will be prepended with zeros.
+Click the one which works the best for you by simply entering the number before the option in the terminal and clicking enter. Then follow the instructions. If the pattern based rename is selected one can use &lt;c&gt; sequence inside the name to sepcify the place where the variable part lies. Furthermore, one can use a number inside the &lt;c&gt; container to specify how many digits they want the newly generated sequence to be, e.g. &lt;c:d4&gt; will generate 4 digits and if the current number has fewer digits then it will be prepended with zeros.
